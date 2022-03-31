@@ -13,13 +13,13 @@ type Video struct {
 }
 
 func main() {
-	GeekForGeeks := pubsub.NewPublisher(100*time.Millisecond, 10)
+	MasterPublisher := pubsub.NewPublisher(100*time.Millisecond, 10)
 
-	defer GeekForGeeks.Close()
+	defer MasterPublisher.Close()
 
-	GeekForGeeksSubscriber := GeekForGeeks.Subscribe()
+	GeekForGeeksSubscriber := MasterPublisher.Subscribe()
 
-	GeekForGeeks.Publish(Video{"ss", 123, []string{"123", "bla"}})
+	MasterPublisher.Publish(Video{"ss", 123, []string{"123", "bla"}})
 
 	go func() {
 		for notification := range GeekForGeeksSubscriber {
@@ -29,7 +29,7 @@ func main() {
 		}
 	}()
 
-	GeekForGeeks.Publish(Video{"usd", 123, []string{"123", "bla"}})
+	MasterPublisher.Publish(Video{"usd", 123, []string{"123", "bla"}})
 
 	time.Sleep(3 * time.Second)
 }
