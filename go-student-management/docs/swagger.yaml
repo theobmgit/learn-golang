@@ -1,0 +1,183 @@
+basePath: /api/v1
+definitions:
+  student.Student:
+    properties:
+      age:
+        type: integer
+      class:
+        type: string
+      cpa:
+        type: number
+      id:
+        type: string
+      name:
+        type: string
+    type: object
+host: localhost:50052
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: Sample student management RPC-based API using gRPC server and gin client.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Student Management API
+  version: "1.0"
+paths:
+  /students:
+    get:
+      consumes:
+      - application/json
+      description: Get all students' information
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              additionalProperties:
+                items:
+                  type: string
+                type: array
+              type: object
+            type: array
+      summary: Get all students
+      tags:
+      - Student
+    post:
+      consumes:
+      - application/json
+      description: Get student information based on student id
+      parameters:
+      - description: Student information
+        in: body
+        name: student
+        required: true
+        schema:
+          $ref: '#/definitions/student.Student'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              items:
+                type: string
+              type: array
+            type: object
+      summary: Add new student
+      tags:
+      - Student
+  /students/:id:
+    delete:
+      consumes:
+      - application/json
+      description: Delete student record based on student ID
+      parameters:
+      - description: Student ID to delete
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              items:
+                type: string
+              type: array
+            type: object
+      summary: Delete student by ID
+      tags:
+      - Student
+  /students/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get student information based on student id
+      parameters:
+      - description: Student ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              items:
+                type: string
+              type: array
+            type: object
+      summary: Get student by student id
+      tags:
+      - Student
+    put:
+      consumes:
+      - application/json
+      description: Update student information based on student ID
+      parameters:
+      - description: Student ID to update
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Student information to update
+        in: body
+        name: student
+        required: true
+        schema:
+          $ref: '#/definitions/student.Student'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              items:
+                type: string
+              type: array
+            type: object
+      summary: Update student by ID
+      tags:
+      - Student
+  /students/name/{name}:
+    get:
+      consumes:
+      - application/json
+      description: Get student information based on student name
+      parameters:
+      - description: Student name
+        in: path
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              items:
+                type: string
+              type: array
+            type: object
+      summary: Get student by name
+      tags:
+      - Student
+schemes:
+- http
+swagger: "2.0"
