@@ -1,0 +1,23 @@
+[
+  {
+    "id": "20194870",
+    "name": "Tu Bui",
+    "age": 20,
+    "class": "ICT-02",
+    "cpa": 3.2
+  },
+  {
+    "id": "20152913",
+    "name": "Hoang Bui",
+    "age": 23,
+    "class": "MTA",
+    "cpa": 4.0
+  },
+  {
+    "id": "20124721",
+    "name": "Hoang Nam",
+    "age": 22,
+    "class": "VNU",
+    "cpa": 2.5
+  }
+]
