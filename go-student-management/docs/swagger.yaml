@@ -70,6 +70,22 @@ paths:
                 type: string
               type: array
             type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              items:
+                type: string
+              type: array
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              items:
+                type: string
+              type: array
+            type: object
       summary: Add new student
       tags:
       - Student
@@ -81,6 +97,7 @@ paths:
       parameters:
       - description: Student ID to delete
         in: path
+        minLength: 8
         name: id
         required: true
         type: string
@@ -89,6 +106,22 @@ paths:
       responses:
         "200":
           description: OK
+          schema:
+            additionalProperties:
+              items:
+                type: string
+              type: array
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              items:
+                type: string
+              type: array
+            type: object
+        "500":
+          description: Internal Server Error
           schema:
             additionalProperties:
               items:
@@ -106,6 +139,7 @@ paths:
       parameters:
       - description: Student ID
         in: path
+        minLength: 8
         name: id
         required: true
         type: string
@@ -114,6 +148,22 @@ paths:
       responses:
         "200":
           description: OK
+          schema:
+            additionalProperties:
+              items:
+                type: string
+              type: array
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              items:
+                type: string
+              type: array
+            type: object
+        "500":
+          description: Internal Server Error
           schema:
             additionalProperties:
               items:
@@ -130,6 +180,7 @@ paths:
       parameters:
       - description: Student ID to update
         in: path
+        minLength: 8
         name: id
         required: true
         type: string
@@ -144,6 +195,22 @@ paths:
       responses:
         "200":
           description: OK
+          schema:
+            additionalProperties:
+              items:
+                type: string
+              type: array
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              items:
+                type: string
+              type: array
+            type: object
+        "500":
+          description: Internal Server Error
           schema:
             additionalProperties:
               items:
@@ -169,6 +236,22 @@ paths:
       responses:
         "200":
           description: OK
+          schema:
+            additionalProperties:
+              items:
+                type: string
+              type: array
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              items:
+                type: string
+              type: array
+            type: object
+        "500":
+          description: Internal Server Error
           schema:
             additionalProperties:
               items:
