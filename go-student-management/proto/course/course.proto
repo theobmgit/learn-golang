@@ -1,0 +1,47 @@
+syntax = 'proto3';
+
+package main;
+
+option go_package = './course';
+
+service CourseService {
+  rpc GetCourseById(CourseId) returns (Course) {}
+  rpc GetCoursesByName(CourseName) returns (Courses) {}
+  rpc GetCourses(EmptyRequest) returns (Courses) {}
+  rpc AddCourse(Course) returns (Course) {}
+  rpc UpdateCourse(Course) returns (Course) {}
+  rpc DeleteCourse(CourseId) returns (Course) {}
+
+  rpc EnrollCourse(CourseId) returns (EnrolledCourse) {}
+}
+
+message Course {
+  string id = 1;
+  string name = 2;
+  int32 credit = 3;
+  repeated string prerequisites = 4;
+}
+
+message CourseId {
+  string id = 1;
+}
+
+message CourseName {
+  string name = 1;
+}
+
+message Courses {
+  repeated Course courses = 1;
+}
+
+message EnrolledCourse {
+  Course course = 1;
+  double score = 2;
+  string grade = 3;
+}
+
+message EnrolledCourses {
+  repeated EnrolledCourses enrolledCourses = 1;
+}
+
+message EmptyRequest {}

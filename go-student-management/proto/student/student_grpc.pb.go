@@ -23,7 +23,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type StudentServiceClient interface {
 	GetStudentById(ctx context.Context, in *StudentId, opts ...grpc.CallOption) (*Student, error)
-	GetStudentByName(ctx context.Context, in *StudentName, opts ...grpc.CallOption) (*Student, error)
+	GetStudentsByName(ctx context.Context, in *StudentName, opts ...grpc.CallOption) (*Students, error)
 	GetStudents(ctx context.Context, in *EmptyRequest, opts ...grpc.CallOption) (*Students, error)
 	AddStudent(ctx context.Context, in *Student, opts ...grpc.CallOption) (*Student, error)
 	UpdateStudent(ctx context.Context, in *Student, opts ...grpc.CallOption) (*Student, error)
@@ -47,9 +47,9 @@ func (c *studentServiceClient) GetStudentById(ctx context.Context, in *StudentId
 	return out, nil
 }
 
-func (c *studentServiceClient) GetStudentByName(ctx context.Context, in *StudentName, opts ...grpc.CallOption) (*Student, error) {
-	out := new(Student)
-	err := c.cc.Invoke(ctx, "/main.StudentService/GetStudentByName", in, out, opts...)
+func (c *studentServiceClient) GetStudentsByName(ctx context.Context, in *StudentName, opts ...grpc.CallOption) (*Students, error) {
+	out := new(Students)
+	err := c.cc.Invoke(ctx, "/main.StudentService/GetStudentsByName", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -97,7 +97,7 @@ func (c *studentServiceClient) DeleteStudent(ctx context.Context, in *StudentId,
 // for forward compatibility
 type StudentServiceServer interface {
 	GetStudentById(context.Context, *StudentId) (*Student, error)
-	GetStudentByName(context.Context, *StudentName) (*Student, error)
+	GetStudentsByName(context.Context, *StudentName) (*Students, error)
 	GetStudents(context.Context, *EmptyRequest) (*Students, error)
 	AddStudent(context.Context, *Student) (*Student, error)
 	UpdateStudent(context.Context, *Student) (*Student, error)
@@ -112,8 +112,8 @@ type UnimplementedStudentServiceServer struct {
 func (UnimplementedStudentServiceServer) GetStudentById(context.Context, *StudentId) (*Student, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetStudentById not implemented")
 }
-func (UnimplementedStudentServiceServer) GetStudentByName(context.Context, *StudentName) (*Student, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetStudentByName not implemented")
+func (UnimplementedStudentServiceServer) GetStudentsByName(context.Context, *StudentName) (*Students, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetStudentsByName not implemented")
 }
 func (UnimplementedStudentServiceServer) GetStudents(context.Context, *EmptyRequest) (*Students, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetStudents not implemented")
@@ -158,20 +158,20 @@ func _StudentService_GetStudentById_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
-func _StudentService_GetStudentByName_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _StudentService_GetStudentsByName_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(StudentName)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(StudentServiceServer).GetStudentByName(ctx, in)
+		return srv.(StudentServiceServer).GetStudentsByName(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/main.StudentService/GetStudentByName",
+		FullMethod: "/main.StudentService/GetStudentsByName",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(StudentServiceServer).GetStudentByName(ctx, req.(*StudentName))
+		return srv.(StudentServiceServer).GetStudentsByName(ctx, req.(*StudentName))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -260,8 +260,8 @@ var StudentService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _StudentService_GetStudentById_Handler,
 		},
 		{
-			MethodName: "GetStudentByName",
-			Handler:    _StudentService_GetStudentByName_Handler,
+			MethodName: "GetStudentsByName",
+			Handler:    _StudentService_GetStudentsByName_Handler,
 		},
 		{
 			MethodName: "GetStudents",

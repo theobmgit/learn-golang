@@ -19,7 +19,7 @@ info:
     email: support@swagger.io
     name: API Support
     url: http://www.swagger.io/support
-  description: Sample student management RPC-based API using gRPC server and gin client.
+  description: Sample student management RPC-based API using gRPC server and gin api.
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
@@ -89,7 +89,7 @@ paths:
       summary: Add new student
       tags:
       - Student
-  /students/:id:
+  /students/{id}:
     delete:
       consumes:
       - application/json
@@ -97,7 +97,6 @@ paths:
       parameters:
       - description: Student ID to delete
         in: path
-        minLength: 8
         name: id
         required: true
         type: string
@@ -131,7 +130,6 @@ paths:
       summary: Delete student by ID
       tags:
       - Student
-  /students/{id}:
     get:
       consumes:
       - application/json

@@ -1,90 +1,13 @@
-package main
+package student
 
 import (
-	"flag"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
-	swaggerFiles "github.com/swaggo/files"
-	ginSwagger "github.com/swaggo/gin-swagger"
-	"go-student-management/docs"
 	pb "go-student-management/proto/student"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
-	"log"
 	"math"
 	"net/http"
-	"regexp"
 	"strings"
 )
-
-var (
-	clientAddr = flag.String("c-addr", "localhost:50052", "The client address in the format of host:port")
-	serverAddr = flag.String("addr", "localhost:50051", "The server address in the format of host:port")
-)
-
-// @title Student Management API
-// @version 1.0
-// @description Sample student management RPC-based API using gRPC server and gin client.
-// @termsOfService http://swagger.io/terms/
-
-// @contact.name API Support
-// @contact.url http://www.swagger.io/support
-// @contact.email support@swagger.io
-
-// @license.name Apache 2.0
-// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
-
-// @host localhost:50052
-// @BasePath /api/v1
-// @schemes http
-func main() {
-	const BasePath = "/api/v1"
-	connection, err := grpc.Dial(*serverAddr, grpc.WithTransportCredentials(insecure.NewCredentials()))
-	if err != nil {
-		log.Fatalf("Client error: %v\n", err)
-	}
-	defer connection.Close()
-
-	client := pb.NewStudentServiceClient(connection)
-
-	router := gin.Default()
-	router.StaticFile("/favicon.ico", "resources/favicon.ico")
-
-	v1 := router.Group(BasePath)
-	{
-		student := v1.Group("/students")
-		{
-			student.GET("", func(ctx *gin.Context) {
-				GetStudents(ctx, client)
-			})
-			student.GET("/:id", func(ctx *gin.Context) {
-				GetStudentById(ctx, client)
-			})
-			student.GET("/name/:name", func(ctx *gin.Context) {
-				GetStudentByName(ctx, client)
-			})
-
-			student.POST("", func(ctx *gin.Context) {
-				AddStudent(ctx, client)
-			})
-
-			student.PUT("/:id", func(ctx *gin.Context) {
-				UpdateStudent(ctx, client)
-			})
-
-			student.DELETE("/:id", func(ctx *gin.Context) {
-				DeleteStudent(ctx, client)
-			})
-		}
-	}
-
-	docs.SwaggerInfo.BasePath = BasePath
-	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-
-	if err := router.Run(*clientAddr); err != nil {
-		log.Fatalf("could not run server: %v", err)
-	}
-}
 
 // GetStudents godoc
 // @Summary      Get all students
@@ -92,7 +15,7 @@ func main() {
 // @Tags         Student
 // @Accept       json
 // @Produce      json
-// @Success      200  {array}  map[string][]string
+// @Success      200  {object}  map[string][]string
 // @Router       /students [get]
 func GetStudents(ctx *gin.Context, client pb.StudentServiceClient) {
 	response, err := client.GetStudents(ctx, &pb.EmptyRequest{})
@@ -141,19 +64,19 @@ func GetStudentById(ctx *gin.Context, client pb.StudentServiceClient) {
 	})
 }
 
-// GetStudentByName godoc
+// GetStudentsByName godoc
 // @Summary      Get student by name
 // @Description  Get student information based on student name
 // @Tags         Student
 // @Accept       json
 // @Produce      json
-// @Param        name path string true "Student name" pattern("^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$)
+// @Param        name query string true "Student name" pattern("^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$)
 // @Success      200  {object}  map[string][]string
 // @Failure      400  {object}  map[string][]string
 // @Failure      500  {object}  map[string][]string
 // @Router       /students/name/{name} [get]
-func GetStudentByName(ctx *gin.Context, client pb.StudentServiceClient) {
-	name := ctx.Param("name")
+func GetStudentsByName(ctx *gin.Context, client pb.StudentServiceClient) {
+	name := ctx.Query("name")
 	if validateName(name) {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"error": "Invalid name pattern",
@@ -162,7 +85,7 @@ func GetStudentByName(ctx *gin.Context, client pb.StudentServiceClient) {
 	}
 	preprocessName(&name)
 
-	response, err := client.GetStudentByName(ctx, &pb.StudentName{Name: name})
+	response, err := client.GetStudentsByName(ctx, &pb.StudentName{Name: name})
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),
@@ -246,11 +169,11 @@ func UpdateStudent(ctx *gin.Context, client pb.StudentServiceClient) {
 // @Tags         Student
 // @Accept       json
 // @Produce      json
-// @Param        id path string true "Student ID to delete" minLength(8)
+// @Param        id path string true "Student ID to delete"
 // @Success      200  {object}  map[string][]string
 // @Failure      400  {object}  map[string][]string
 // @Failure      500  {object}  map[string][]string
-// @Router       /students/:id [delete]
+// @Router       /students/{id} [delete]
 func DeleteStudent(ctx *gin.Context, client pb.StudentServiceClient) {
 	id := ctx.Param("id")
 
@@ -341,24 +264,23 @@ func validateId(id string) bool {
 }
 
 func validateName(name string) bool {
-	match, _ := regexp.MatchString("^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$", name)
-	return match
+	return false
 }
 
 func validateAge(age int32) bool {
-	return age >= 0
+	return age < 0
 }
 
 func validateClass(class string) bool {
-	return true
+	return false
 }
 
 func validateCpa(Cpa float32) bool {
-	return Cpa >= 0.0 && Cpa <= 4.0
+	return Cpa < 0.0 || Cpa > 4.0
 }
 
 func preprocessName(name *string) {
-	*name = strings.ToTitle(strings.ToLower(*name))
+	*name = strings.Title(strings.ToLower(*name))
 }
 
 func preprocessClass(class *string) {

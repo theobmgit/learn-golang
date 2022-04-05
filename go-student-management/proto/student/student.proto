@@ -6,7 +6,7 @@ option go_package = './student';
 
 service StudentService {
   rpc GetStudentById(StudentId) returns (Student) {}
-  rpc GetStudentByName(StudentName) returns (Student) {}
+  rpc GetStudentsByName(StudentName) returns (Students) {}
   rpc GetStudents(EmptyRequest) returns (Students) {}
   rpc AddStudent(Student) returns (Student) {}
   rpc UpdateStudent(Student) returns (Student) {}
@@ -17,8 +17,8 @@ message Student {
   string id = 1;
   string name = 2;
   int32 age = 3;
-  string class = 4;
-  float cpa = 5;
+  repeated double gpa = 4;
+  double cpa = 5;
 }
 
 message StudentId {
